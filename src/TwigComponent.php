@@ -51,13 +51,17 @@ class TwigComponent extends Template
      */
     public function render($template, $data = [], $return = true)
     {
+        $viewname = '';
+
         if ($template instanceof Page) {
             $page = $template;
             $file = $page->templateFile();
             $data = $this->data($page, $data);
+            $viewname = $page->template();
         } else {
             $file = $template;
             $data = $this->data(null, $data);
+            $viewname = $template;
         }
 
         // check for an existing template
@@ -72,7 +76,8 @@ class TwigComponent extends Template
         // load the template
         if (pathinfo($file, PATHINFO_EXTENSION) === 'twig') {
             $twig = TwigEnv::instance();
-            $result = $twig->renderPath($file, Tpl::$data, $return, true);
+//            $result = $twig->renderPath($file, Tpl::$data, $return, true);
+            $result = $twig->renderPath($viewname . '.twig', Tpl::$data, $return, true);
         } else {
             $result = Tpl::load($file, [], $return);
         }
